@@ -541,7 +541,7 @@ func parseDateAndTime(pdu *gosnmp.SnmpPDU) (float64, error) {
 func pduToSamples(indexOids []int, pdu *gosnmp.SnmpPDU, metric *config.Metric, oidToPdu map[string]gosnmp.SnmpPDU, idxCache map[string]string, logger log.Logger, metrics Metrics) []prometheus.Metric {
 	var err error
 	// The part of the OID that is the indexes.
-	labels := indexesToLabels(indexOids, metric, oidToPdu, idxCache, metrics)
+	labels := indexesToLabels(indexOids, metric, oidToPdu, idxCache, logger, metrics)
 
 	value := getPduValue(pdu)
 
@@ -891,7 +891,7 @@ func getPrevOid(oid string) string {
 	return strings.Join(oids, ".")
 }
 
-func indexesToLabels(indexOids []int, metric *config.Metric, oidToPdu map[string]gosnmp.SnmpPDU, idxCache map[string]string, metrics Metrics) map[string]string {
+func indexesToLabels(indexOids []int, metric *config.Metric, oidToPdu map[string]gosnmp.SnmpPDU, idxCache map[string]string, logger log.Logger, metrics Metrics) map[string]string {
 	labels := map[string]string{}
 	labelOids := map[string][]int{}
 
@@ -917,10 +917,11 @@ func indexesToLabels(indexOids []int, metric *config.Metric, oidToPdu map[string
 			oid = fmt.Sprintf("%s.%s", oid, listToOid(labelOids[label]))
 		}
 		if pdu, ok := oidToPdu[oid]; ok {
+			t := lookup.Type
 			if len(lookup.Labelvalue.Value) > 0 {
 				s := idxCache[oid]
 				if len(s) == 0 {
-					s = pduValueAsString(&pdu, lookup.Type)
+					s = pduValueAsString(&pdu, t, metrics)
 					var t string
 					indexes := lookup.Labelvalue.Regex.FindStringSubmatchIndex(s)
 					if indexes != nil {
@@ -933,9 +934,8 @@ func indexesToLabels(indexOids []int, metric *config.Metric, oidToPdu map[string
 				labels[lookup.Labelname] = s
 			} else {
 				// pretty cheap, so we do not cache
-				labels[lookup.Labelname] = pduValueAsString(&pdu, lookup.Type)
+				labels[lookup.Labelname] = pduValueAsString(&pdu, t, metrics)
 			}
-			t := lookup.Type
 			if typeMapping, ok := combinedTypeMapping[lookup.Type]; ok {
 				// Lookup associated sub type in previous object.
 				prevOid := getPrevOid(lookup.Oid)
