@@ -1,0 +1,25 @@
+FROM golang:latest
+
+RUN apt-get update && \
+    apt-get install -y libsnmp-dev p7zip-full build-essential git
+
+WORKDIR "/src"
+RUN git clone https://github.com/Takalele/snmp_exporter.git
+WORKDIR "/src/snmp_exporter"
+RUN go mod tidy
+RUN go build
+WORKDIR "/src/snmp_exporter/generator"
+RUN go build
+RUN cp generator /bin/generator
+
+WORKDIR "/opt"
+
+RUN rm /src -rf
+RUN apt-get remove -y build-essential git && \
+    apt autoremove -y
+
+ENTRYPOINT ["/bin/generator"]
+
+ENV MIBDIRS mibs
+
+CMD ["generate"]
