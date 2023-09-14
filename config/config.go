@@ -202,11 +202,11 @@ type Index struct {
 }
 
 type Lookup struct {
-	Labels    []string `yaml:"labels"`
-	Labelname string   `yaml:"labelname"`
-	Labelvalue  RegexpExtract	`yaml:"labelvalue,omitempty"`
-	Oid       string   `yaml:"oid,omitempty"`
-	Type      string   `yaml:"type,omitempty"`
+	Labels     []string      `yaml:"labels"`
+	Labelname  string        `yaml:"labelname"`
+	Labelvalue RegexpExtract `yaml:"labelvalue,omitempty"`
+	Oid        string        `yaml:"oid,omitempty"`
+	Type       string        `yaml:"type,omitempty"`
 }
 
 // Secret is a string that must not be revealed on marshaling.

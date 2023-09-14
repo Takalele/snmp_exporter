@@ -76,9 +76,9 @@ func (c *ModuleConfig) UnmarshalYAML(unmarshal func(interface{}) error) error {
 }
 
 type Lookup struct {
-	SourceIndexes     []string `yaml:"source_indexes"`
-	Lookup            string   `yaml:"lookup"`
-	DropSourceIndexes bool     `yaml:"drop_source_indexes,omitempty"`
-	Rename            string   `yaml:"rename,omitempty"`
-	Revalue           config.RegexpExtract  `yaml:"revalue,omitempty"`
+	SourceIndexes     []string             `yaml:"source_indexes"`
+	Lookup            string               `yaml:"lookup"`
+	DropSourceIndexes bool                 `yaml:"drop_source_indexes,omitempty"`
+	Rename            string               `yaml:"rename,omitempty"`
+	Revalue           config.RegexpExtract `yaml:"revalue,omitempty"`
 }

@@ -414,7 +414,7 @@ func (c Collector) collect(ch chan<- prometheus.Metric, module *NamedModule) {
 	for _, pdu := range results.pdus {
 		oidToPdu[pdu.Name[1:]] = pdu
 	}
-    idxCache := map[string]string{}
+	idxCache := map[string]string{}
 	metricTree := buildMetricTree(module.Metrics)
 	// Look for metrics that match each pdu.
 PduLoop:

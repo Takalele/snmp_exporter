@@ -418,10 +418,10 @@ func generateConfigModule(cfg *ModuleConfig, node *Node, nameToNode map[string]*
 					return nil, fmt.Errorf("unknown index type %s for %s", indexNode.Type, lookup.Lookup)
 				}
 				l := &config.Lookup{
-					Labelname: renameLabel(indexNode.Label, lookup.Rename),
+					Labelname:  renameLabel(indexNode.Label, lookup.Rename),
 					Labelvalue: lookup.Revalue,
-					Type:      typ,
-					Oid:       indexNode.Oid,
+					Type:       typ,
+					Oid:        indexNode.Oid,
 				}
 				for _, oldIndex := range lookup.SourceIndexes {
 					l.Labels = append(l.Labels, sanitizeLabelName(oldIndex))
