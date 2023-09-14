@@ -6,7 +6,7 @@ RUN apt-get update && \
 COPY ./generator  /bin/generator
 
 WORKDIR "/opt"
-
+RUN ll /usr/lib/x86_64-linux-gnu/libnetsnmp*
 ENTRYPOINT ["/bin/generator"]
 
 ENV MIBDIRS mibs
